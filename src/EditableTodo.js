@@ -12,49 +12,51 @@ import TodoForm from "./TodoForm";
  * EditableTodoList -> EditableTodo -> { Todo, TodoForm }
  */
 
-function EditableTodo({todo, update, remove}) {
+function EditableTodo({ todo, update, remove }) {
 
-  [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   /** Toggle if this is being edited */
-  function toggleEdit() { 
+  function toggleEdit() {
+    // use the setter callback function
     setIsEditing((oldState) => !oldState);
   }
 
   /** Call remove fn passed to this. */
   function handleDelete() {
-    remove(todo.id); 
+    remove(todo.id);
   }
 
   /** Edit form saved; toggle isEditing and update in ancestor. */
-  function handleSave(formData) { 
+  function handleSave(formData) {
     toggleEdit();
-    update(todo.id);
+    update(formData);
   }
 
   return (
-      <div className="EditableTodo">
+    <div className="EditableTodo">
 
-                { isEditing ?  <TodoForm /> :
-
-                <div className="mb-3">
-                  <div className="float-right text-sm-right">
-                    <button
-                        className="EditableTodo-toggle btn-link btn btn-sm"
-                        onClick={toggleEdit}>
-                      Edit
+      { isEditing 
+      ? <TodoForm initialFormData={todo} handleSave={handleSave} /> 
+      :
+        <div className="mb-3">
+          <div className="float-right text-sm-right">
+            <button
+              className="EditableTodo-toggle btn-link btn btn-sm"
+              onClick={toggleEdit}>
+              Edit
                     </button>
-                    <button
-                        className="EditableTodo-delBtn btn-link btn btn-sm text-danger"
-                        onClick={handleDelete}>
-                      Del
+            <button
+              className="EditableTodo-delBtn btn-link btn btn-sm text-danger"
+              onClick={handleDelete}>
+              Del
                     </button>
-                  </div>
-                  <Todo />
-                </div>
-                }
+          </div>
+          <Todo id={todo.id} title={todo.title} description={todo.description} priority={todo.priority} />
+        </div>
+      }
 
-      </div>
+    </div>
   );
 }
 
